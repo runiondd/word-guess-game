@@ -1,7 +1,9 @@
 var Game = {
     numGuessCount: 0,
+    wins: 0,
     guessedLetters: [],
     guessingWord: [],
+    incorrectGuesses: [],
     challengeWords:           
     [   
         "GIBSON",
@@ -17,8 +19,10 @@ var Game = {
     didWin : function (keyPress) {
         console.log("didWin();");
         console.log("guessedLetters.indexOf" + Game.guessedLetters.indexOf("_") );
-        if(Game.guessedLetters.indexOf("_") === -1) {
+        if(Game.guessedLetters.indexOf("_ ") === -1) {
             console.log("Win");
+            Game.wins++;
+           
         } else {
             console.log("No Win");
         }
@@ -30,13 +34,16 @@ var Game = {
     recordGuess : function (keyPress) {
         // console.log("recordGuess();");
         // console.log("guessingWordLength=" + Game.guessingWord.length);
+
         for (var i=0; i < Game.guessingWord.length; i++) {
-            // console.log("Guessing guessingWord[i]: " + Game.guessingWord[i]);
-            // console.log("keyPress: " + keyPress);
             if (Game.guessingWord[i] === keyPress) {
                 Game.guessedLetters[i] = keyPress;
-            } 
-            // console.log("Game.guessedLetters[i]=" + Game.guessedLetters[i]);
+            } else {
+                if(Game.incorrectGuesses.indexOf(keyPress) === -1) {
+                    Game.incorrectGuesses[Game.incorrectGuesses.length] = keyPress;      
+                }
+            }
+            Game.displayIncorrectGuesses();    // console.log("Game.guessedLetters[i]=" + Game.guessedLetters[i]);
         }
     },
 
@@ -48,21 +55,37 @@ var Game = {
         return true;
     },
 
+    displayIncorrectGuesses : function () {
+        var guessedLettersStr = "";
+
+        for (var i = 0; i < Game.incorrectGuesses.length; i++) {
+            if (Game.incorrectGuesses === 0) {
+                guessedLettersStr = Game.incorrectGuesses[i] + " ";
+            } else {
+
+                guessedLettersStr += Game.incorrectGuesses[i] + " ";
+            }
+        } 
+        document.getElementById("wrongLetters").innerHTML = "Incorrect Guesses: " + guessedLettersStr;
+    },
+
     selectChallengeWord : function (index) {
         var currentWordIndex = Math.floor(Math.random() * Game.challengeWords.length);
         Game.guessingWord =  Game.challengeWords[currentWordIndex];
-        console.log("selectChallengeWord=" + Game.guessingWord);
+        console.log("guessingWord:" + Game.guessingWord);
     }
 };
 
 function initializeGame() {
-    //console.log("Initialize();");
+    console.log("Initialize();");
     Game.selectChallengeWord();
     for (var i = 0; i < Game.guessingWord.length; i++) {
-        Game.guessedLetters[i] = "_";
-       
+        Game.guessedLetters[i] = "_ ";
     } 
-//console.log("Guessing Letters Len: " + Game.guessedLetters.length);
+    updateDisplay();
+   
+   // Game.displayIncorrectGuesses();
+console.log("Guessing Letters Len: " + Game.guessedLetters.length);
 }   
 
 document.onkeyup = function(event) {
@@ -82,10 +105,14 @@ document.onkeyup = function(event) {
  function updateDisplay() {
     console.log("updateDisplay");
     var displayGuessesString = "";
-     for (var x = 0; x < Game.guessedLetters.length; x++) {
-          displayGuessesString = displayGuessesString + Game.guessedLetters[x];
-     }
-     document.getElementById("numberOfAttemptsLbl").innerHTML = "Guesses: " + displayGuessesString;
+
+    for (var x = 0; x < Game.guessedLetters.length; x++) {
+        displayGuessesString = displayGuessesString + Game.guessedLetters[x];
+    }
+    
+    document.getElementById("guessesLbl").innerHTML = "Guesses: " + displayGuessesString;
+    document.getElementById("wins").innerHTML = "Total Wins: " + Game.wins;
+    Game.displayIncorrectGuesses(); 
 }
 
 
