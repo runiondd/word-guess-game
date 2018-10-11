@@ -38,9 +38,9 @@ var Game = {
         for (var i=0; i < Game.guessingWord.length; i++) {
             if (Game.guessingWord[i] === keyPress) {
                 Game.guessedLetters[i] = keyPress;
-            } else {
-                if(Game.incorrectGuesses.indexOf(keyPress) === -1) {
-                    Game.incorrectGuesses[Game.incorrectGuesses.length] = keyPress;      
+            } else {             
+                if((Game.incorrectGuesses.indexOf(keyPress) == -1) && (Game.guessingWord.indexOf(keyPress) == -1)) { //only add if the guess is not already in the array
+                    Game.incorrectGuesses[Game.incorrectGuesses.length] = keyPress;   
                 }
             }
             Game.displayIncorrectGuesses();    // console.log("Game.guessedLetters[i]=" + Game.guessedLetters[i]);
@@ -56,17 +56,16 @@ var Game = {
     },
 
     displayIncorrectGuesses : function () {
-        var guessedLettersStr = "";
+        var incorrectLettersStr = "";
 
         for (var i = 0; i < Game.incorrectGuesses.length; i++) {
             if (Game.incorrectGuesses === 0) {
-                guessedLettersStr = Game.incorrectGuesses[i] + " ";
+                incorrectLettersStr = Game.incorrectGuesses[i] + " ";
             } else {
-
-                guessedLettersStr += Game.incorrectGuesses[i] + " ";
+                incorrectLettersStr += Game.incorrectGuesses[i] + " ";
             }
         } 
-        document.getElementById("wrongLetters").innerHTML = "Incorrect Guesses: " + guessedLettersStr;
+        document.getElementById("wrongLetters").innerHTML = "Incorrect Guesses: " + incorrectLettersStr;
     },
 
     selectChallengeWord : function (index) {
@@ -85,7 +84,7 @@ function initializeGame() {
     updateDisplay();
    
    // Game.displayIncorrectGuesses();
-console.log("Guessing Letters Len: " + Game.guessedLetters.length);
+    console.log("Guessing Letters Len: " + Game.guessedLetters.length);
 }   
 
 document.onkeyup = function(event) {
